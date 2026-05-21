@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Civic Tech Montréal</title>
+  <meta name="description" content="A bilingual community in Montréal where curious people use technology and design to strengthen civic life." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg:      #f5f2ec;
+      --bg-warm: #ede9e1;
+      --ink:     #1a1812;
+      --ink-2:   #3d3a33;
+      --ink-3:   #7a7569;
+      --teal:    #1a6b58;
+      --teal-lt: #e8f3f0;
+      --teal-md: #c8e2dc;
+      --rust:    #c05a2e;
+      --rule:    #ccc8bf;
+      --white:   #ffffff;
+      --font-display: 'DM Serif Display', Georgia, serif;
+      --font-body:    'DM Sans', system-ui, sans-serif;
+      --font-mono:    'DM Mono', monospace;
+      --max: 1060px;
+      --pad: clamp(1.25rem, 5vw, 3rem);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background-color: var(--bg);
+      background-image: radial-gradient(circle, rgba(26,24,18,.11) 1px, transparent 1px);
+      background-size: 26px 26px;
+      background-attachment: fixed;
+      color: var(--ink);
+      font-family: var(--font-body);
+      font-size: clamp(.95rem, 1.05vw, 1.05rem);
+      line-height: 1.75;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    .container {
+      max-width: var(--max);
+      margin-inline: auto;
+      padding-inline: var(--pad);
+      position: relative;
+      z-index: 1;
+    }
+    section { padding-block: clamp(4rem, 8vw, 7rem); }
+
+    .label {
+      font-family: var(--font-mono);
+      font-size: .7rem;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+    }
+    .label::before { content: ''; width: 1.25rem; height: 1px; background: var(--rule); }
+
+    /* ── LANGUAGE SWITCHER ───────────────────────── */
+    .fr { display: none; }
+    .en { display: inline; }
+    [data-lang="fr"] .fr { display: inline; }
+    [data-lang="fr"] .en { display: none; }
+    .fr-block { display: none; }
+    .en-block { display: block; }
+    [data-lang="fr"] .fr-block { display: block; }
+    [data-lang="fr"] .en-block { display: none; }
+
+    .lang-toggle {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      border: 1.5px solid var(--rule);
+      border-radius: 4px;
+      overflow: hidden;
+      font-family: var(--font-mono);
+      font-size: .72rem;
+      font-weight: 500;
+      letter-spacing: .08em;
+    }
+    .lang-btn {
+      padding: .4rem .7rem;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      color: var(--ink-3);
+      transition: background .15s, color .15s;
+    }
+    .lang-btn.active {
+      background: var(--teal);
+      color: #fff;
+    }
+    .lang-btn:hover:not(.active) { background: var(--bg-warm); color: var(--ink); }
+
+    /* ── NAV ─────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 1.1rem var(--pad);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      transition: background .25s, box-shadow .25s;
+    }
+    nav.scrolled {
+      background: rgba(245,242,236,.93);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 1px 0 var(--rule);
+    }
+    .nav-logo { font-family: var(--font-display); font-size: 1.1rem; color: var(--ink); white-space: nowrap; }
+    .nav-logo em { font-style: normal; color: var(--teal); }
+    .nav-right { display: flex; align-items: center; gap: 1.5rem; }
+    .nav-links { display: flex; gap: 1.5rem; list-style: none; align-items: center; }
+    .nav-links a { font-size: .875rem; font-weight: 500; color: var(--ink-2); transition: color .15s; }
+    .nav-links a:hover { color: var(--teal); }
+    .nav-links a.nav-cta, .nav-cta {
+      font-size: .85rem; font-weight: 600;
+      padding: .5rem 1.1rem;
+      background: var(--teal); color: #fff;
+      border-radius: 4px; transition: background .15s;
+      white-space: nowrap;
+    }
+    .nav-links a.nav-cta:hover, .nav-cta:hover { background: #155748; color: #fff; }
+
+    /* ── BUTTONS ─────────────────────────────────── */
+    .btn {
+      display: inline-flex; align-items: center; gap: .4rem;
+      font-family: var(--font-body); font-size: .875rem; font-weight: 600;
+      padding: .7rem 1.4rem; border-radius: 4px; border: none; cursor: pointer;
+      transition: background .15s, border-color .15s, color .15s, transform .15s;
+    }
+    .btn-primary { background: var(--teal); color: #fff; }
+    .btn-primary:hover { background: #155748; transform: translateY(-1px); }
+    .btn-outline { background: transparent; color: var(--ink-2); border: 1.5px solid var(--rule); }
+    .btn-outline:hover { border-color: var(--ink-2); transform: translateY(-1px); }
+
+    /* ── REVEAL ANIMATION ────────────────────────── */
+    body.anim-ready .reveal { opacity: 0; transform: translateY(20px); transition: opacity .6s ease, transform .6s ease; }
+    body.anim-ready .reveal.visible { opacity: 1; transform: none; }
+    .d1 { transition-delay: .07s; }
+    .d2 { transition-delay: .15s; }
+    .d3 { transition-delay: .23s; }
+
+    /* ── HERO ────────────────────────────────────── */
+    #hero {
+      min-height: 100svh;
+      display: flex; flex-direction: column; justify-content: center;
+      padding-top: 5rem; position: relative; overflow: hidden;
+    }
+    .hero-inner {
+      display: grid; grid-template-columns: 1.1fr 1fr;
+      gap: clamp(3rem, 6vw, 5rem); align-items: center;
+    }
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: .45rem;
+      font-family: var(--font-mono); font-size: .7rem;
+      letter-spacing: .12em; text-transform: uppercase;
+      color: var(--teal); background: var(--teal-lt);
+      border: 1px solid var(--teal-md); padding: .3rem .8rem;
+      border-radius: 100px; margin-bottom: 1.75rem;
+      opacity: 0; animation: fadeUp .5s .1s forwards;
+    }
+    .hero-tag::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--teal); }
+    h1.hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 5vw, 4.25rem);
+      line-height: 1.1; letter-spacing: -.02em; color: var(--ink);
+      margin-bottom: 1.4rem; opacity: 0; animation: fadeUp .6s .2s forwards;
+    }
+    h1.hero-title em { font-style: italic; color: var(--teal); }
+    .hero-sub {
+      font-size: clamp(.95rem, 1.1vw, 1.05rem); color: var(--ink-2);
+      line-height: 1.8; max-width: 44ch; margin-bottom: 2.25rem;
+      opacity: 0; animation: fadeUp .6s .32s forwards;
+    }
+    .hero-actions {
+      display: flex; gap: .75rem; flex-wrap: wrap;
+      opacity: 0; animation: fadeUp .6s .44s forwards;
+    }
+    .hero-card {
+      background: var(--white); border: 1px solid var(--rule);
+      border-radius: 10px; padding: 2rem;
+      box-shadow: 0 4px 28px rgba(26,24,18,.07);
+      opacity: 0; animation: fadeUp .7s .55s forwards;
+    }
+    .hero-card-lbl {
+      font-family: var(--font-mono); font-size: .67rem;
+      letter-spacing: .16em; text-transform: uppercase;
+      color: var(--ink-3); margin-bottom: 1.5rem;
+    }
+    .stat-row {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1px; background: var(--rule);
+      border-radius: 6px; overflow: hidden; margin-bottom: 1.5rem;
+    }
+    .stat-cell { background: var(--bg); padding: 1.25rem 1rem; }
+    .stat-num { font-family: var(--font-display); font-size: 2.25rem; line-height: 1; color: var(--teal); margin-bottom: .2rem; }
+    .stat-lbl { font-size: .78rem; color: var(--ink-3); font-weight: 500; }
+    .hero-card-note {
+      font-size: .875rem; color: var(--ink-2); line-height: 1.7;
+      border-top: 1px solid var(--rule); padding-top: 1.25rem;
+    }
+    .hero-card-note strong { color: var(--ink); font-weight: 600; }
+    .skyline {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      height: 160px; pointer-events: none; z-index: 0;
+    }
+
+    /* ── ABOUT ───────────────────────────────────── */
+    #about { background: var(--bg-warm); border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+    .about-grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: clamp(3rem, 6vw, 5rem); align-items: start; }
+    .about-sticky { position: sticky; top: 6rem; }
+    .about-heading { font-family: var(--font-display); font-size: clamp(1.9rem, 3.5vw, 2.8rem); line-height: 1.15; letter-spacing: -.02em; margin-bottom: 1rem; }
+    .about-lede { color: var(--ink-2); line-height: 1.8; margin-bottom: 1.75rem; }
+    .about-body { color: var(--ink-2); line-height: 1.8; }
+    .about-body p { margin-bottom: 1.25rem; }
+    .about-body p:last-child { margin-bottom: 0; }
+    .pillar-list { display: flex; flex-direction: column; gap: 1px; margin-top: 2.25rem; border: 1px solid var(--rule); border-radius: 8px; overflow: hidden; }
+    .pillar { background: var(--white); padding: 1.2rem 1.4rem; display: flex; gap: 1rem; align-items: flex-start; transition: background .15s; }
+    .pillar:hover { background: var(--teal-lt); }
+    .pillar-icon { font-size: 1.05rem; margin-top: .1rem; flex-shrink: 0; }
+    .pillar h3 { font-weight: 600; font-size: .9rem; margin-bottom: .2rem; }
+    .pillar p { font-size: .84rem; color: var(--ink-3); line-height: 1.65; }
+
+    /* ── IDEAS ───────────────────────────────────── */
+    #ideas { border-bottom: 1px solid var(--rule); }
+    .ideas-intro { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(3rem, 6vw, 5rem); margin-bottom: clamp(2.5rem, 5vw, 3.5rem); align-items: end; }
+    .ideas-heading { font-family: var(--font-display); font-size: clamp(1.9rem, 3.5vw, 2.8rem); line-height: 1.15; letter-spacing: -.02em; }
+    .ideas-lede { color: var(--ink-2); line-height: 1.8; }
+    .ideas-lede em { font-style: italic; color: var(--ink); }
+    .ideas-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    .idea-card { background: var(--white); border: 1px solid var(--rule); border-radius: 8px; padding: 1.5rem; transition: box-shadow .2s, transform .2s; }
+    .idea-card:hover { box-shadow: 0 6px 20px rgba(26,24,18,.08); transform: translateY(-2px); }
+    .idea-area { font-family: var(--font-mono); font-size: .67rem; letter-spacing: .14em; text-transform: uppercase; color: var(--teal); margin-bottom: .8rem; }
+    .idea-card h3 { font-weight: 600; font-size: .925rem; line-height: 1.4; margin-bottom: .55rem; }
+    .idea-card p { font-size: .84rem; color: var(--ink-3); line-height: 1.7; }
+    .idea-badge { display: inline-flex; align-items: center; gap: .4rem; font-family: var(--font-mono); font-size: .63rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); margin-top: .9rem; }
+    .idea-badge::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--rust); opacity: .75; }
+    .idea-badge.open::before { background: var(--ink-3); opacity: .4; }
+    .ideas-note { margin-top: 1.75rem; padding: 1.25rem 1.5rem; background: var(--teal-lt); border: 1px solid var(--teal-md); border-radius: 8px; font-size: .9rem; color: var(--ink-2); line-height: 1.7; }
+    .ideas-note strong { color: var(--teal); font-weight: 600; }
+    .ideas-note a { color: var(--teal); font-weight: 600; border-bottom: 1px solid var(--teal-md); }
+    .ideas-note a:hover { border-color: var(--teal); }
+
+    /* ── EVENTS ──────────────────────────────────── */
+    #events { background: var(--bg-warm); border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+    .events-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: clamp(2rem, 4vw, 3rem); flex-wrap: wrap; gap: 1rem; }
+    .events-heading { font-family: var(--font-display); font-size: clamp(1.9rem, 3.5vw, 2.8rem); line-height: 1.1; letter-spacing: -.02em; }
+    .luma-wrap { border: 1px solid var(--rule); border-radius: 10px; overflow: hidden; background: var(--white); box-shadow: 0 2px 16px rgba(26,24,18,.05); }
+    .luma-wrap iframe { display: block; width: 100%; height: 520px; border: none; }
+
+    /* ── GET INVOLVED ────────────────────────────── */
+    #join { border-bottom: 1px solid var(--rule); }
+    .join-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(3rem, 6vw, 5rem); align-items: start; }
+    .join-heading { font-family: var(--font-display); font-size: clamp(1.9rem, 3.5vw, 2.8rem); line-height: 1.15; letter-spacing: -.02em; margin-bottom: 1rem; }
+    .join-body { color: var(--ink-2); line-height: 1.8; margin-bottom: 2rem; }
+    .channel-list { display: flex; flex-direction: column; gap: .75rem; }
+    .channel { display: flex; align-items: center; gap: 1rem; padding: 1rem 1.25rem; background: var(--white); border: 1px solid var(--rule); border-radius: 8px; text-decoration: none; transition: border-color .15s, background .15s; }
+    .channel:hover { border-color: var(--teal); background: var(--teal-lt); }
+    .channel-icon { width: 2.2rem; height: 2.2rem; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 1.05rem; flex-shrink: 0; background: var(--bg-warm); }
+    .channel-info { flex: 1; }
+    .channel-name { font-weight: 600; font-size: .875rem; margin-bottom: .1rem; }
+    .channel-desc { font-size: .8rem; color: var(--ink-3); }
+    .channel-arrow { color: var(--ink-3); transition: transform .15s, color .15s; }
+    .channel:hover .channel-arrow { transform: translateX(3px); color: var(--teal); }
+    .join-form-wrap { background: var(--white); border: 1px solid var(--rule); border-radius: 10px; padding: 2rem; box-shadow: 0 2px 16px rgba(26,24,18,.05); }
+    .form-title { font-family: var(--font-display); font-size: 1.35rem; letter-spacing: -.01em; margin-bottom: .3rem; }
+    .form-subtitle { font-size: .84rem; color: var(--ink-3); margin-bottom: 1.75rem; }
+    .field { display: flex; flex-direction: column; gap: .4rem; margin-bottom: 1rem; }
+    .field label { font-size: .72rem; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: var(--ink-3); }
+    .field input, .field select { background: var(--bg); border: 1.5px solid var(--rule); border-radius: 4px; color: var(--ink); font-family: var(--font-body); font-size: .9rem; padding: .65rem .9rem; width: 100%; outline: none; transition: border-color .15s; }
+    .field input::placeholder { color: var(--ink-3); opacity: .7; }
+    .field input:focus, .field select:focus { border-color: var(--teal); }
+    .field select { appearance: none; cursor: pointer; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+    .form-note { font-size: .75rem; color: var(--ink-3); margin-top: .75rem; line-height: 1.5; }
+
+    /* ── FOOTER ──────────────────────────────────── */
+    footer { background: var(--ink); color: rgba(255,255,255,.5); padding-block: 2.5rem; }
+    .footer-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.25rem; }
+    .footer-logo { font-family: var(--font-display); font-size: 1rem; color: #fff; }
+    .footer-logo em { font-style: normal; color: #6ecdb8; }
+    .footer-links { display: flex; gap: 1.5rem; list-style: none; flex-wrap: wrap; }
+    .footer-links a { font-size: .8rem; font-weight: 500; color: rgba(255,255,255,.45); transition: color .15s; }
+    .footer-links a:hover { color: rgba(255,255,255,.9); }
+    .footer-copy { font-size: .75rem; color: rgba(255,255,255,.3); }
+
+    /* ── KEYFRAMES ───────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── RESPONSIVE ──────────────────────────────── */
+    @media (max-width: 860px) {
+      .hero-inner { grid-template-columns: 1fr; }
+      .hero-card { display: none; }
+      .about-grid, .join-grid, .ideas-intro { grid-template-columns: 1fr; }
+      .about-sticky { position: static; }
+      .ideas-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      .nav-links { display: none; }
+      .form-row { grid-template-columns: 1fr; }
+      .luma-wrap iframe { height: 420px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="navbar">
+    <a href="#hero" class="nav-logo">Civic Tech <em>Montréal</em></a>
+    <div class="nav-right">
+      <ul class="nav-links">
+        <li><a href="#about"><span class="en">About</span><span class="fr">À propos</span></a></li>
+        <li><a href="#ideas"><span class="en">Ideas</span><span class="fr">Idées</span></a></li>
+        <li><a href="#events"><span class="en">Events</span><span class="fr">Événements</span></a></li>
+        <li>
+          <a href="#join" class="nav-cta">
+            <span class="en">Get involved</span>
+            <span class="fr">Participer</span>
+          </a>
+        </li>
+      </ul>
+      <div class="lang-toggle" role="group" aria-label="Language / Langue">
+        <button class="lang-btn active" id="btn-en" aria-pressed="true">EN</button>
+        <button class="lang-btn" id="btn-fr" aria-pressed="false">FR</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="container">
+      <div class="hero-inner">
+        <div>
+          <span class="hero-tag">Montréal · Est. 2024</span>
+          <h1 class="hero-title">
+            <span class="en">Where curious people<br/>meet <em>civic purpose.</em></span>
+            <span class="fr">Là où la curiosité<br/>rencontre <em>la cité.</em></span>
+          </h1>
+          <p class="hero-sub en-block">
+            We're a bilingual, volunteer community of residents, technologists, and designers exploring how tools and data can strengthen civic life in Montréal. No experience required — just curiosity.
+          </p>
+          <p class="hero-sub fr-block">
+            Nous sommes une communauté bénévole et bilingue de résidents, technologues et designers qui explorent comment les outils et les données peuvent renforcer la vie civique à Montréal. Aucune expérience requise — juste de la curiosité.
+          </p>
+          <div class="hero-actions">
+            <a href="#join" class="btn btn-primary">
+              <span class="en">Join the community</span>
+              <span class="fr">Rejoindre la communauté</span>
+            </a>
+            <a href="#events" class="btn btn-outline">
+              <span class="en">Upcoming events →</span>
+              <span class="fr">Prochains événements →</span>
+            </a>
+          </div>
+        </div>
+        <div class="hero-card">
+          <div class="hero-card-lbl">
+            <span class="en">Where we're at</span>
+            <span class="fr">Notre état actuel</span>
+          </div>
+          <div class="stat-row">
+            <div class="stat-cell">
+              <div class="stat-num">100+</div>
+              <div class="stat-lbl"><span class="en">Community members</span><span class="fr">Membres</span></div>
+            </div>
+            <div class="stat-cell">
+              <div class="stat-num">1</div>
+              <div class="stat-lbl"><span class="en">Year active</span><span class="fr">An d'activité</span></div>
+            </div>
+          </div>
+          <p class="hero-card-note en-block">
+            A space to connect, question, and collaborate with people who care about how Montréal works — and who want to help make it better.
+          </p>
+          <p class="hero-card-note fr-block">
+            Un espace pour se connecter, questionner et collaborer avec des gens qui se soucient du fonctionnement de Montréal — et qui veulent l'améliorer.
+          </p>
+        </div>
+      </div>
+    </div>
+    <svg class="skyline" viewBox="0 0 1440 160" preserveAspectRatio="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,160 L0,128 L50,128 L50,100 L70,100 L70,84 L82,84 L82,72 L94,72 L94,84 L106,84 L106,100 L130,100 L130,118 L170,118 L170,88 L190,88 L190,72 L202,72 L202,62 L210,62 L210,72 L222,72 L222,88 L250,88 L250,112 L290,112 L290,86 L310,86 L310,68 L324,68 L324,54 L332,54 L332,68 L346,68 L346,86 L380,86 L380,106 L420,106 L420,80 L442,80 L442,62 L454,62 L454,50 L462,50 L462,62 L474,62 L474,80 L510,80 L510,100 L550,100 L550,78 L572,78 L572,62 L582,62 L582,52 L590,52 L590,62 L600,62 L600,78 L634,78 L634,104 L670,104 L670,80 L692,80 L692,60 L704,60 L704,48 L712,48 L712,60 L724,60 L724,80 L760,80 L760,106 L800,106 L800,84 L820,84 L820,68 L830,68 L830,56 L838,56 L838,68 L848,68 L848,84 L880,84 L880,112 L920,112 L920,86 L940,86 L940,68 L954,68 L954,56 L962,56 L962,68 L976,68 L976,86 L1010,86 L1010,108 L1050,108 L1050,82 L1072,82 L1072,64 L1082,64 L1082,50 L1090,50 L1090,64 L1100,64 L1100,82 L1134,82 L1134,106 L1170,106 L1170,82 L1190,82 L1190,68 L1200,68 L1200,82 L1230,82 L1230,108 L1270,108 L1270,86 L1292,86 L1292,68 L1306,68 L1306,58 L1314,58 L1314,68 L1328,68 L1328,86 L1370,86 L1370,120 L1440,120 L1440,160 Z" fill="var(--bg-warm)" opacity=".65"/>
+    </svg>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-sticky">
+          <p class="label"><span class="en">Who We Are</span><span class="fr">Qui nous sommes</span></p>
+          <h2 class="about-heading">
+            <span class="en">A community that gives a damn.</span>
+            <span class="fr">Une communauté qui s'implique vraiment.</span>
+          </h2>
+          <p class="about-lede en-block">Civic Tech Montréal brings together residents, technologists, and designers who believe that when communities lead, better tools follow.</p>
+          <p class="about-lede fr-block">Civic Tech Montréal rassemble des résidents, technologues et designers qui croient que lorsque les communautés mènent, de meilleurs outils émergent.</p>
+          <a href="#join" class="btn btn-primary">
+            <span class="en">Join us →</span>
+            <span class="fr">Nous rejoindre →</span>
+          </a>
+        </div>
+        <div class="about-right reveal">
+          <div class="about-body">
+            <p class="en-block">We're a gathering point for people who care about their city. Our meetups bring together neighbours, civic workers, researchers, and builders in the same room — to share what they're seeing, name what isn't working, and explore what might.</p>
+            <p class="fr-block">Nous sommes un point de rassemblement pour les gens qui tiennent à leur ville. Nos rencontres réunissent des voisins, des travailleurs civiques, des chercheurs et des bâtisseurs — pour partager ce qu'ils observent, nommer ce qui ne fonctionne pas, et explorer ce qui pourrait changer.</p>
+            <p class="en-block">Technology is one tool among many. What matters more is the conversation — and making sure the people most affected by a problem are part of shaping the response.</p>
+            <p class="fr-block">La technologie est un outil parmi d'autres. Ce qui compte davantage, c'est la conversation — et s'assurer que les personnes les plus touchées par un problème participent à l'élaboration des solutions.</p>
+            <p class="en-block">Everyone belongs here: coders, organizers, researchers, policy folks, designers, and anyone who cares enough to show up. Vraiment, tout le monde.</p>
+            <p class="fr-block">Tout le monde a sa place ici : développeurs, organisateurs, chercheurs, gens de politiques publiques, designers, et quiconque tient assez à sa ville pour se présenter. Everyone, really.</p>
+          </div>
+          <div class="pillar-list">
+            <div class="pillar">
+              <span class="pillar-icon">🏙️</span>
+              <div>
+                <h3><span class="en">Community-led</span><span class="fr">Mené par la communauté</span></h3>
+                <p class="en-block">The people most affected by a problem are the ones who should shape its solution. We organize around that principle.</p>
+                <p class="fr-block">Les personnes les plus touchées par un problème sont celles qui devraient façonner sa solution. On s'organise autour de ce principe.</p>
+              </div>
+            </div>
+            <div class="pillar">
+              <span class="pillar-icon">🌱</span>
+              <div>
+                <h3><span class="en">Rooted in Montréal</span><span class="fr">Ancrés à Montréal</span></h3>
+                <p class="en-block">We work on challenges facing our city — transit, housing, public participation — with the nuance of people who actually live here.</p>
+                <p class="fr-block">Nous travaillons sur les défis de notre ville — transport, logement, participation publique — avec le regard de gens qui y vivent vraiment.</p>
+              </div>
+            </div>
+            <div class="pillar">
+              <span class="pillar-icon">🤝</span>
+              <div>
+                <h3><span class="en">Open by default</span><span class="fr">Ouvert par défaut</span></h3>
+                <p class="en-block">Non-hierarchical and accessible. Whatever we build will be open source, and every conversation is one anyone can join.</p>
+                <p class="fr-block">Non hiérarchique et accessible. Tout ce qu'on construit sera open source, et chaque conversation est ouverte à tous.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- IDEAS -->
+  <section id="ideas">
+    <div class="container">
+      <div class="ideas-intro">
+        <div>
+          <p class="label"><span class="en">Community Focus Areas</span><span class="fr">Axes communautaires</span></p>
+          <h2 class="ideas-heading">
+            <span class="en">Where we're<br/>focusing together.</span>
+            <span class="fr">Là où on concentre<br/>nos efforts ensemble.</span>
+          </h2>
+        </div>
+        <p class="ideas-lede en-block">Our community has been mapping the terrain — these are the civic challenges generating the most conversation. <em>Come add your perspective.</em></p>
+        <p class="ideas-lede fr-block">Notre communauté a commencé à cartographier le terrain — voici les défis civiques qui suscitent le plus de conversation. <em>Venez ajouter votre perspective.</em></p>
+      </div>
+      <div class="ideas-grid">
+        <div class="idea-card reveal d1">
+          <div class="idea-area"><span class="en">Housing</span><span class="fr">Logement</span></div>
+          <h3><span class="en">Navigating tenant rights</span><span class="fr">S'y retrouver dans ses droits de locataire</span></h3>
+          <p class="en-block">The TAL process is confusing. Could a plain-language guide help renters understand their options before things escalate?</p>
+          <p class="fr-block">Le processus du TAL est complexe. Un guide en langage clair pourrait-il aider les locataires à comprendre leurs options avant que la situation s'envenime ?</p>
+          <span class="idea-badge"><span class="en">Exploring</span><span class="fr">En exploration</span></span>
+        </div>
+        <div class="idea-card reveal d2">
+          <div class="idea-area"><span class="en">Civic Participation</span><span class="fr">Participation citoyenne</span></div>
+          <h3><span class="en">Public consultation accessibility</span><span class="fr">Accessibilité des consultations publiques</span></h3>
+          <p class="en-block">OCPM reports are long and dense. How might we help more residents actually engage with public consultations?</p>
+          <p class="fr-block">Les rapports de l'OCPM sont longs et denses. Comment aider plus de résidents à s'engager réellement dans les consultations publiques ?</p>
+          <span class="idea-badge"><span class="en">Exploring</span><span class="fr">En exploration</span></span>
+        </div>
+        <div class="idea-card reveal d3">
+          <div class="idea-area"><span class="en">Open Data</span><span class="fr">Données ouvertes</span></div>
+          <h3><span class="en">Making city data usable</span><span class="fr">Rendre les données de la ville accessibles</span></h3>
+          <p class="en-block">Montréal publishes a lot of open data. But using it takes technical skill. What if it didn't?</p>
+          <p class="fr-block">Montréal publie beaucoup de données ouvertes. Mais les exploiter demande des compétences techniques. Et si ce n'était plus le cas ?</p>
+          <span class="idea-badge"><span class="en">Exploring</span><span class="fr">En exploration</span></span>
+        </div>
+        <div class="idea-card reveal d1">
+          <div class="idea-area"><span class="en">Transit</span><span class="fr">Transport</span></div>
+          <h3><span class="en">Understanding transit equity</span><span class="fr">Comprendre l'équité en transport</span></h3>
+          <p class="en-block">Which boroughs have the worst access to frequent transit — and what does that mean for residents who rely on it?</p>
+          <p class="fr-block">Quels arrondissements ont le moins accès aux transports fréquents — et qu'est-ce que cela signifie pour les résidents qui en dépendent ?</p>
+          <span class="idea-badge"><span class="en">Exploring</span><span class="fr">En exploration</span></span>
+        </div>
+        <div class="idea-card reveal d2">
+          <div class="idea-area"><span class="en">Governance</span><span class="fr">Gouvernance</span></div>
+          <h3><span class="en">How does council actually vote?</span><span class="fr">Comment vote vraiment le conseil ?</span></h3>
+          <p class="en-block">Borough council votes are public but hard to follow. Could a cleaner record make local democracy more legible?</p>
+          <p class="fr-block">Les votes du conseil d'arrondissement sont publics mais difficiles à suivre. Un registre plus clair pourrait-il rendre la démocratie locale plus lisible ?</p>
+          <span class="idea-badge"><span class="en">Exploring</span><span class="fr">En exploration</span></span>
+        </div>
+        <div class="idea-card reveal d3">
+          <div class="idea-area"><span class="en">Community</span><span class="fr">Communauté</span></div>
+          <h3><span class="en">Your idea here</span><span class="fr">Votre idée ici</span></h3>
+          <p class="en-block">Seriously. We're in early days and the best projects will come from people who see gaps in their own communities.</p>
+          <p class="fr-block">Sérieusement. Nous en sommes aux débuts et les meilleurs projets viendront de gens qui voient des lacunes dans leurs propres communautés.</p>
+          <span class="idea-badge open"><span class="en">Pitch us →</span><span class="fr">Proposez-nous →</span></span>
+        </div>
+      </div>
+      <div class="ideas-note reveal">
+        <strong><span class="en">We're looking for problem partners, not just builders.</span><span class="fr">On cherche des partenaires de problèmes, pas seulement des bâtisseurs.</span></strong>
+        <span class="en-block"> If you work in a community organization, government team, or research context and see a problem worth exploring — we'd love to hear from you. <a href="mailto:info@civictechmtl.ca">Get in touch →</a></span>
+        <span class="fr-block"> Si vous travaillez dans un organisme communautaire, une équipe gouvernementale ou un contexte de recherche et voyez un problème qui vaut la peine d'explorer — nous aimerions vous entendre. <a href="mailto:info@civictechmtl.ca">Nous contacter →</a></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- EVENTS -->
+  <section id="events">
+    <div class="container">
+      <div class="events-header">
+        <div>
+          <p class="label"><span class="en">Stay Connected</span><span class="fr">Restez connectés</span></p>
+          <h2 class="events-heading"><span class="en">Upcoming Events</span><span class="fr">Prochains événements</span></h2>
+        </div>
+        <a href="https://lu.ma/cal-ufE11n3n8vnRubz" target="_blank" rel="noopener" class="btn btn-outline">
+          <span class="en">Open in Luma →</span><span class="fr">Ouvrir dans Luma →</span>
+        </a>
+      </div>
+      <div class="luma-wrap reveal">
+        <iframe
+          src="https://lu.ma/embed/calendar/cal-ufE11n3n8vnRubz/events"
+          frameborder="0"
+          allowfullscreen=""
+          aria-hidden="false"
+          tabindex="0"
+        ></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- GET INVOLVED -->
+  <section id="join">
+    <div class="container">
+      <div class="join-grid">
+        <div>
+          <p class="label"><span class="en">Get Involved</span><span class="fr">Participer</span></p>
+          <h2 class="join-heading">
+            <span class="en">Come find us where you're comfortable.</span>
+            <span class="fr">Retrouvez-nous là où vous êtes à l'aise.</span>
+          </h2>
+          <p class="join-body en-block">There's no single way to be part of this. Show up to an event, lurk in Slack, share a project idea, or just tell us what civic problems keep you up at night.</p>
+          <p class="join-body fr-block">Il n'y a pas qu'une seule façon de participer. Venez à un événement, rôdez dans Slack, partagez une idée de projet, ou dites-nous simplement quels problèmes civiques vous empêchent de dormir.</p>
+          <div class="channel-list">
+            <a href="https://lu.ma/cal-ufE11n3n8vnRubz" target="_blank" rel="noopener" class="channel">
+              <div class="channel-icon">📅</div>
+              <div class="channel-info">
+                <div class="channel-name">Luma — <span class="en">Events Calendar</span><span class="fr">Calendrier d'événements</span></div>
+                <div class="channel-desc"><span class="en">RSVP for meetups and browse upcoming events</span><span class="fr">Inscrivez-vous aux rencontres et consultez les prochains événements</span></div>
+              </div>
+              <span class="channel-arrow">→</span>
+            </a>
+            <a href="https://join.slack.com/t/civictechmontreal/shared_invite/zt-3sx2os89v-6rIwr2sNmhl6r2FZvyPoCQ" target="_blank" rel="noopener" class="channel">
+              <div class="channel-icon">💬</div>
+              <div class="channel-info">
+                <div class="channel-name">Slack — <span class="en">Community Chat</span><span class="fr">Discussion communautaire</span></div>
+                <div class="channel-desc"><span class="en">Where the day-to-day conversation happens</span><span class="fr">Là où les conversations quotidiennes se déroulent</span></div>
+              </div>
+              <span class="channel-arrow">→</span>
+            </a>
+            <a href="https://github.com/Civic-Tech-Montreal" target="_blank" rel="noopener" class="channel">
+              <div class="channel-icon">🛠️</div>
+              <div class="channel-info">
+                <div class="channel-name">GitHub — <span class="en">Code & Projects</span><span class="fr">Code et projets</span></div>
+                <div class="channel-desc"><span class="en">Where we'll build things together (repos coming soon)</span><span class="fr">Là où on construira ensemble (dépôts bientôt disponibles)</span></div>
+              </div>
+              <span class="channel-arrow">→</span>
+            </a>
+          </div>
+        </div>
+        <div class="join-form-wrap reveal">
+          <div class="form-title"><span class="en">Stay in the loop</span><span class="fr">Rester dans la boucle</span></div>
+          <div class="form-subtitle"><span class="en">Drop your info and we'll reach out when something relevant comes up.</span><span class="fr">Laissez vos coordonnées et on vous contactera quand quelque chose de pertinent se présente.</span></div>
+          <div class="form-row">
+            <div class="field">
+              <label><span class="en">First name</span><span class="fr">Prénom</span></label>
+              <input type="text" placeholder="Marie" />
+            </div>
+            <div class="field">
+              <label><span class="en">Last name</span><span class="fr">Nom</span></label>
+              <input type="text" placeholder="Tremblay" />
+            </div>
+          </div>
+          <div class="field">
+            <label>Email</label>
+            <input type="email" id="email-input" placeholder="marie@example.com" />
+          </div>
+          <div class="field">
+            <label><span class="en">What brings you here?</span><span class="fr">Qu'est-ce qui vous amène ?</span></label>
+            <select>
+              <option value="">Select one… / Choisir…</option>
+              <option>I write code / Je code</option>
+              <option>I design things / Je fais du design</option>
+              <option>I work in policy or government / Je travaille en politique ou en gouvernement</option>
+              <option>I do research / Je fais de la recherche</option>
+              <option>I'm a community organizer / Je suis organisateur·trice communautaire</option>
+              <option>I'm a student / Je suis étudiant·e</option>
+              <option>Just curious / Juste curieux·se</option>
+              <option>Other / Autre</option>
+            </select>
+          </div>
+          <button id="submit-btn" class="btn btn-primary" style="width:100%;justify-content:center;margin-top:.25rem;">
+            <span class="en">Send →</span><span class="fr">Envoyer →</span>
+          </button>
+          <p class="form-note"><span class="en">No spam. We respect your inbox. Unsubscribe anytime.</span><span class="fr">Pas de spam. On respecte votre boîte mail. Désabonnez-vous n'importe quand.</span></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-logo">Civic Tech <em>Montréal</em></div>
+        <ul class="footer-links">
+          <li><a href="https://github.com/Civic-Tech-Montreal" target="_blank">GitHub</a></li>
+          <li><a href="https://lu.ma/cal-ufE11n3n8vnRubz" target="_blank">Luma</a></li>
+          <li><a href="https://join.slack.com/t/civictechmontreal/shared_invite/zt-3sx2os89v-6rIwr2sNmhl6r2FZvyPoCQ" target="_blank">Slack</a></li>
+          <li><a href="mailto:info@civictechmtl.ca"><span class="en">Contact</span><span class="fr">Contact</span></a></li>
+        </ul>
+        <p class="footer-copy">© 2025 Civic Tech Montréal · Open source always</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ── NAV SCROLL ──────────────────────────────────
+    const nav = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 40);
+    }, { passive: true });
+
+    // ── REVEAL ANIMATION ────────────────────────────
+    document.body.classList.add('anim-ready');
+
+    function checkReveals() {
+      document.querySelectorAll('.reveal:not(.visible)').forEach(el => {
+        if (el.getBoundingClientRect().top < window.innerHeight - 40) {
+          el.classList.add('visible');
+        }
+      });
+    }
+    checkReveals();
+    window.addEventListener('load', checkReveals);
+    window.addEventListener('scroll', checkReveals, { passive: true });
+
+    // ── LANGUAGE SWITCHER ───────────────────────────
+    function setLang(lang) {
+      document.documentElement.setAttribute('data-lang', lang);
+      document.documentElement.setAttribute('lang', lang);
+      document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+      document.getElementById('btn-fr').classList.toggle('active', lang === 'fr');
+      document.getElementById('btn-en').setAttribute('aria-pressed', lang === 'en');
+      document.getElementById('btn-fr').setAttribute('aria-pressed', lang === 'fr');
+      localStorage.setItem('civic-tech-lang', lang);
+    }
+
+    const savedLang = localStorage.getItem('civic-tech-lang') || 'en';
+    setLang(savedLang);
+
+    document.getElementById('btn-en').addEventListener('click', () => setLang('en'));
+    document.getElementById('btn-fr').addEventListener('click', () => setLang('fr'));
+
+    // ── SIGNUP ──────────────────────────────────────
+    document.getElementById('submit-btn').addEventListener('click', function(e) {
+      e.preventDefault();
+      const email = document.getElementById('email-input').value;
+      if (!email || !email.includes('@')) {
+        alert(document.documentElement.getAttribute('data-lang') === 'fr'
+          ? 'Veuillez entrer une adresse courriel valide.'
+          : 'Please enter a valid email address.');
+        return;
+      }
+      const lang = document.documentElement.getAttribute('data-lang');
+      this.textContent = lang === 'fr' ? "✓ Merci — on vous revient bientôt !" : "✓ Thanks — we'll be in touch!";
+      this.style.background = '#155748';
+      this.disabled = true;
+    });
+  </script>
+</body>
+</html>
